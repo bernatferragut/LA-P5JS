@@ -104,92 +104,139 @@ position: relative;"
 src="https://editor.p5js.org/embed/B17BydaY7"></iframe>
 
 ```javascript
-// Slider s for Size'
-// Slider rnd for Random'
-// Slider alph for 'Alpha'
-// Reset buttons to restart default params
+/**
+ *  Re-group the array of FFT bins into an
+ *  array of more meaningful values
+ *  using the splitOctaves method.
+ */
 
-// canvas pararms
-let w = 732;
-let h = 250;
-let s = 2;
-let gds;
-// dot
-let dot;
-// slider params
-let spacing = 9;
-let dotList = [];
-let rnd = 3;
-let alph = 255;
-
-// Matrix creation function
-function matrix() {
-  background('black');
-  dotList = [];
-  s_size.value(2);
-  s_rnd.value(0);
-  // dotList creation
-  for (let x = spacing / 2; x < w; x += spacing) {
-    for (let y = spacing / 2; y < h; y += spacing) {
-      dotList.push(new Dot(x, y, s));
-    }
-  }
-}
+var source, fft;
 
 function setup() {
-  // canvas
-  createCanvas(w, h);
-  // sliders
-  s_size = createSlider(1, 10, 2);
-  s_size.position(25, 7);
-  s_rnd = createSlider(0, 10, 0);
-  s_rnd.position(25, 25);
-  s_alph = createSlider(0, 50, 25);
-  s_alph.position(25, 45);
-  // buttons
-  b_reset = createButton('reset');
-  b_reset.position(5, 225);
-  matrix();
+  createCanvas(windowWidth, windowHeight);
+  noFill();
+
+  source = new p5.AudioIn();
+  source.start();
+
+  fft = new p5.FFT(0.8, 1024);
+  fft.setInput(source);
 }
 
 function draw() {
-  background(0, alph);
-  // sliders control
-  text("s", 5, 20);
-  s = s_size.value();
-  text('rnd', 5, 40);
-  rnd = s_rnd.value();
-  text('a', 5, 60);
-  alph = s_alph.value();
-  // button
-  b_reset.mousePressed(matrix);
+  background(220);
+  var spectrum = fft.analyze();
+  var newBuffer = [];
 
-  // dotList mapping actions
-  dotList.map((dot) => {
-    dot.on(s);
-    dot.randomness(rnd);
-  })
+  // scaledSpectrum is a new, smaller array of more meaningful values
+  var scaledSpectrum = splitOctaves(spectrum, 3);
+  var len = scaledSpectrum.length;
+
+  // draw shape
+  beginShape();
+
+    // one at the far corner
+    curveVertex(0, height);
+
+    for (var i = 0; i < len; i++) {
+      var point = smoothPoint(scaledSpectrum, i);
+      var x = map(i, 0, len-1, 0, width);
+      var y = map(point, 0, 255, height, 0);
+      curveVertex(x, y);
+    }
+
+    // one last point at the end
+    curveVertex(width, height);
+
+  endShape();
 }
 
-// Dot object
-class Dot {
-  // class attributes
-  constructor(x, y, s) {
-    this.x = x | 0;
-    this.y = y | 0;
-    this.size = s | 2;
-  }
-  // class methods 
-  on(s) { // here we pass the size parameter to affect this method
-    noStroke();
-    fill(color('white'));
 
-    ellipse(this.x, this.y, s, s);
+/**
+ *  Divides an fft array into octaves with each
+ *  divided by three, or by a specified "slicesPerOctave".
+ *  
+ *  There are 10 octaves in the range 20 - 20,000 Hz,
+ *  so this will result in 10 * slicesPerOctave + 1
+ *
+ *  @method splitOctaves
+ *  @param {Array} spectrum Array of fft.analyze() values
+ *  @param {Number} [slicesPerOctave] defaults to thirds
+ *  @return {Array} scaledSpectrum array of the spectrum reorganized by division
+ *                                 of octaves
+ */
+function splitOctaves(spectrum, slicesPerOctave) {
+  var scaledSpectrum = [];
+  var len = spectrum.length;
+
+  // default to thirds
+  var n = slicesPerOctave|| 3;
+  var nthRootOfTwo = Math.pow(2, 1/n);
+
+  // the last N bins get their own 
+  var lowestBin = slicesPerOctave;
+
+  var binIndex = len - 1;
+  var i = binIndex;
+
+
+  while (i > lowestBin) {
+    var nextBinIndex = round( binIndex/nthRootOfTwo );
+
+    if (nextBinIndex === 1) return;
+
+    var total = 0;
+    var numBins = 0;
+
+    // add up all of the values for the frequencies
+    for (i = binIndex; i > nextBinIndex; i--) {
+      total += spectrum[i];
+      numBins++;
+    }
+
+    // divide total sum by number of bins
+    var energy = total/numBins;
+    scaledSpectrum.push(energy);
+
+    // keep the loop going
+    binIndex = nextBinIndex;
   }
-  randomness(rnd) {
-    this.x += random(-rnd, rnd);
-    this.y += random(-rnd, rnd);
+
+  // add the lowest bins at the end
+  for (var j = i; j > 0; j--) {
+    scaledSpectrum.push(spectrum[j]);
   }
+
+  // reverse so that array has same order as original array (low to high frequencies)
+  scaledSpectrum.reverse();
+
+  return scaledSpectrum;
+}
+
+// average a point in an array with its neighbors
+function smoothPoint(spectrum, index, numberOfNeighbors) {
+
+  // default to 2 neighbors on either side
+  var neighbors = numberOfNeighbors || 2;
+  var len = spectrum.length;
+
+  var val = 0;
+
+  // start below the index
+  var indexMinusNeighbors = index - neighbors;
+  var smoothedPoints = 0;
+
+  for (var i = indexMinusNeighbors; i < (index+neighbors) && i < len; i++) {
+    // if there is a point at spectrum[i], tally it
+    if (typeof(spectrum[i]) !== 'undefined') {
+      val += spectrum[i];
+      smoothedPoints++;
+    }
+  }
+
+  val = val/smoothedPoints;
+
+  return val;
 }
 ```
 
