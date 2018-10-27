@@ -1,0 +1,38 @@
+* {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Archivo Black', sans-serif;
+  color: rgb(43, 43, 43);;
+  font-size: 2em;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  height: 10%;
+}
+
+.outerFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px 10px;
+}
+
+.knob { 
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+}
