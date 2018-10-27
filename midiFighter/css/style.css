@@ -11,16 +11,11 @@ html, body {
   font-size: 2em;
 }
 
-.title {
-  display: flex;
-  justify-content: center;
-  height: 10%;
-}
-
 .outerFrame {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -32,7 +27,25 @@ html, body {
 }
 
 .knob { 
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50px;
 }
+
+.canvasOuterContainer {
+  background: black;
+  border: 1px solid black;
+  border-radius: 15px;
+  height: 100px;
+  margin: 10px;
+  overflow: hidden;
+  width: 380px;
+}
+
+/* .canvas {
+  grid-column-start: 1;
+  grid-column-end: 5;
+  grid-row: 1;
+  background-color: rgb(43, 43, 43);
+  border-radius: 20px;
+} */
