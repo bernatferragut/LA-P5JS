@@ -7,6 +7,15 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/p4.css">
         <!-- JS LIBRARIES-->
+        <!-- MIDI -->
+        <script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+        <script>
+                if (navigator.requestMIDIAccess) {
+                        console.log('This browser supports WebMIDI!');
+                } else {
+                        console.log('WebMIDI is not supported in this browser.');
+                }
+        </script>
         <!-- P5JS -->
         <script type="text/javascript" src="js/p5.min.js"></script>
         <script type="text/javascript" src="js/p5.dom.min.js"></script>
@@ -18,7 +27,7 @@
 <body>
         <div class="outerFrame">
                 <!-- P5JS DRAWING -->
-                <div class="canvasOuterContainer">   
+                <div class="canvasOuterContainer">
                         <div id="superCanvas"></div>
                 </div>
                 <!-- MIDIFIGHTER -->
@@ -87,6 +96,12 @@
                                 <input id="k16" class="preset4" type="range" min="0" max="10" data-width="80"
                                         data-height="80" data-angleOffset="180" data-angleRange="359">
                         </div>
+                </div>
+                <!-- MIDI PARAMS -->
+                <br>
+                <div>
+                        <p>Knob number: <span id="knobNumber"></span></p>
+                        <p>Value: <span id="value"></span></p>
                 </div>
         </div>
         <!-- MAIN JS -->

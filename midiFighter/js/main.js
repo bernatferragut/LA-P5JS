@@ -1,39 +1,15 @@
 // JS
 
-// for (var i = 1; i < 6; i++) {
-//     Array.prototype.slice.call(document.getElementsByClassName('preset' + i)).forEach(function(el) {
-//         new Knob(el, new Ui['P' + i]());
-//         el.addEventListener('change', function  () {
-//           console.log(el.value)
-//         })
-//     })
-// }
-
-// ALL KNOBS AT THE SAME TIME
-// Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
-//     new Knob(el, new Ui.P4());
-//     el.addEventListener('change', function  () {
-//         knobSweep = el.value;
-//         console.log(knobSweep, 'knobSweep');
-//     })
-// })
-
-// ONE KNOB AT A TIME
-// let k1 = document.getElementById('k1');
-// new Knob(k1, new Ui.P4());
-// k1.addEventListener('change', function(){
-//     knobSweep = k1.value;
-//     console.log(knobSweep, 'k1-value');
-// });
-
 // KNOBJS
-let knob1, knob5, knob9, knob13;
-let knobSweep1 = 0, knobSweep5 = 0, knobSweep9 = 0, knobSweep13 = 0;
+let knob1, knob5, knob9, knob13;  // First vertival knobs row => FIRE
+let knob2, knob6, knob10, knob14; // Second vertical knobs row => AIR
+let knob3, knob7, knob11, knob15; // Third vertical knobs row => WATER
+let knob4, knob8, knob12, knob16; // Fourth vertical knobs row => EARTH
 
 // P5JS
 let canvas, w =380,  h = 150;
 let dot, s = 4;
-let multiplier = 1;
+let speedMultiplier = 0;
 
 function setup(){
     // Knobs creation
@@ -42,10 +18,10 @@ function setup(){
     });
     // Individual knob values detection
     knob1 = document.getElementById('k1');
-    knob1.addEventListener('change', ()=> {
-        knobSweep1 = knob1.value
-        console.log('knob1:'+ knobSweep1);
-    });
+    console.log(knob1);
+    // knob1.addEventListener('change', ()=> { 
+    //     console.log('knob1.value: ' + knob1.value)
+    // });
 
     knob5 = document.getElementById('k5');
     knob5.addEventListener('change', ()=> {
@@ -74,12 +50,12 @@ function setup(){
 }
 
 function draw(){
-    // Knobs update
-    multiplier = knobSweep1;
+    // Knobs control
+    speedMultiplier = knob1.value;
     // Canvas update
     background(8, 20);
     dot.on();
-    dot.move(multiplier);
+    dot.move(speedMultiplier);
 }
 
 // Dot object
@@ -97,11 +73,42 @@ class Dot {
       fill(255);
       ellipse(this.x, this.y, this.size, this.size);
     }
-    move(multiplier) {
-        this.x += this.velX * multiplier;
+    move(times) {
+        this.x += this.velX * times;
         if (this.x + s / 2 > w || this.x - s / 2 < 1) {
           this.velX = this.velX * -1;
         }
     }
   }
+
+// MIDI Controller management
+WebMidi.enable(function () {
+
+    // Viewing available inputs
+    //console.log(WebMidi.inputs);
+  
+    // Retrieve an input by name, id or index
+    var input = WebMidi.getInputByName("Midi Fighter Twister"); // ID: 663841880
+  
+    // Listen to control change message on all channels
+    input.addListener('controlchange', 1,
+        function (e) {
+            console.log("Received 'controlchange' message.",    );
+            switch (e.controller.number) {
+                case 0:
+                    knob1.value = e.value / 12.7; // each step 12.7 
+                    break;  
+            }
+
+            // Displays usefull data about the MIDI controller
+            document.getElementById("knobNumber").innerHTML = e.controller.number;
+            document.getElementById("value").innerHTML = e.value;
+        }
+    );
+  
+  /*  
+    // Remove all listeners on the input
+    input.removeListener();
+  */
+  });
 
