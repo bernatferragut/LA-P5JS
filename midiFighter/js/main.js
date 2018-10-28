@@ -1,5 +1,14 @@
 // JS
 
+// for (var i = 1; i < 6; i++) {
+//     Array.prototype.slice.call(document.getElementsByClassName('preset' + i)).forEach(function(el) {
+//         new Knob(el, new Ui['P' + i]());
+//         el.addEventListener('change', function  () {
+//           console.log(el.value)
+//         })
+//     })
+// }
+
 // ALL KNOBS AT THE SAME TIME
 // Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
 //     new Knob(el, new Ui.P4());
@@ -18,7 +27,8 @@
 // });
 
 // KNOBJS
-let knobSweep = 0;
+let knob1, knob5, knob9, knob13;
+let knobSweep1 = 0, knobSweep5 = 0, knobSweep9 = 0, knobSweep13 = 0;
 
 // P5JS
 let canvas, w =380,  h = 150;
@@ -26,14 +36,35 @@ let dot, s = 4;
 let multiplier = 1;
 
 function setup(){
-    // Knob creation
+    // Knobs creation
     Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
         new Knob(el, new Ui.P4());
-        el.addEventListener('change', function  () {
-            knobSweep = el.value;
-            console.log(knobSweep, 'knobSweep');
-        })
-    })
+    });
+    // Individual knob values detection
+    knob1 = document.getElementById('k1');
+    knob1.addEventListener('change', ()=> {
+        knobSweep1 = knob1.value
+        console.log('knob1:'+ knobSweep1);
+    });
+
+    knob5 = document.getElementById('k5');
+    knob5.addEventListener('change', ()=> {
+        knobSweep5 = knob5.value
+        console.log('knob5:' + knobSweep5);
+    });
+
+    knob9 = document.getElementById('k9');
+    knob9.addEventListener('change', ()=> {
+        knobSweep9 = knob9.value
+        console.log('knob9:'+ knobSweep9);
+    });
+
+    knob13 = document.getElementById('k13');
+    knob13.addEventListener('change', ()=> {
+        knobSweep13 = knob13.value
+        console.log('knob13:' + knobSweep13);
+    });
+    
     // Canvas creation
     canvas = createCanvas(w, h);
     // Move the canvas inside div with id'superCanvas'
@@ -44,7 +75,7 @@ function setup(){
 
 function draw(){
     // Knobs update
-    multiplier = knobSweep;
+    multiplier = knobSweep1;
     // Canvas update
     background(8, 20);
     dot.on();
