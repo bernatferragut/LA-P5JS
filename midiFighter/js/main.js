@@ -1,50 +1,39 @@
 // JS
-/**
-* Just a lazy way to convert all inputs into knobs.
-* Normally you would write `new Knob(document.getElementById('someIdHere'), new Ui.P1());` to create a knob.
-*/
 
-// for (var i = 1; i < 16; i++) {
-//     Array.prototype.slice.call(document.getElementsByClassName('preset' + i)).forEach(function(el) {
-//         new Knob(el, new Ui['P' + i]());
-//         el.addEventListener('change', function  () {
-//             console.log(el.value)
-//         })
-//     })
-// }
-
-
-// All at the same time
+// ALL KNOBS AT THE SAME TIME
 // Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
 //     new Knob(el, new Ui.P4());
 //     el.addEventListener('change', function  () {
-//         console.log(el.value)
+//         knobSweep = el.value;
+//         console.log(knobSweep, 'knobSweep');
 //     })
 // })
 
-
-// Good programming
+// ONE KNOB AT A TIME
 // let k1 = document.getElementById('k1');
-// let knob = new Knob(k1, new Ui.P4());
+// new Knob(k1, new Ui.P4());
 // k1.addEventListener('change', function(){
-//     console.log(k1.value);
+//     knobSweep = k1.value;
+//     console.log(knobSweep, 'k1-value');
 // });
 
-let rotation = 0;
-
-Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
-    new Knob(el, new Ui.P4());
-    el.addEventListener('change', function  () {
-        rotation = el.value;
-        console.log(rotation);
-    })
-})
+// KNOBJS
+let knobSweep = 0;
 
 // P5JS
 let canvas, w =380,  h = 150;
 let dot, s = 4;
+let multiplier = 1;
 
 function setup(){
+    // Knob creation
+    Array.prototype.slice.call(document.getElementsByClassName('preset4')).forEach(function(el) {
+        new Knob(el, new Ui.P4());
+        el.addEventListener('change', function  () {
+            knobSweep = el.value;
+            console.log(knobSweep, 'knobSweep');
+        })
+    })
     // Canvas creation
     canvas = createCanvas(w, h);
     // Move the canvas inside div with id'superCanvas'
@@ -54,9 +43,12 @@ function setup(){
 }
 
 function draw(){
-    background('rgb(10,10,10)');
+    // Knobs update
+    multiplier = knobSweep;
+    // Canvas update
+    background(8, 20);
     dot.on();
-    dot.move();
+    dot.move(multiplier);
 }
 
 // Dot object
@@ -71,11 +63,11 @@ class Dot {
     // class methods
     on() {
       noStroke();
-      fill(color('white'));
+      fill(255);
       ellipse(this.x, this.y, this.size, this.size);
     }
-    move() {
-        this.x += this.velX;
+    move(multiplier) {
+        this.x += this.velX * multiplier;
         if (this.x + s / 2 > w || this.x - s / 2 < 1) {
           this.velX = this.velX * -1;
         }
