@@ -19,8 +19,8 @@ function setup(){
     // Individual knob values detection
     knob1 = document.getElementById('k1');
     console.log(knob1);
-    // knob1.addEventListener('change', ()=> { 
-    //     console.log('knob1.value: ' + knob1.value)
+    // knob1.dispatchEvent('change', ()=> { 
+    //     knob1.value = speedMultiplier;
     // });
 
     knob5 = document.getElementById('k5');
@@ -97,6 +97,10 @@ WebMidi.enable(function () {
             switch (e.controller.number) {
                 case 0:
                     knob1.value = e.value / 12.7; // each step 12.7 
+                    knob1.dispatchEvent(new Event('change'));
+                    knob1.addEventListener('change', () => {
+                        speedMultiplier = knob1.value;
+                    })
                     break;  
             }
 
