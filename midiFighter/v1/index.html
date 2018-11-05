@@ -1,0 +1,29 @@
+<head>
+  <!-- P5JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+  <!-- MIDI -->
+  <script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+  <script>
+    if (navigator.requestMIDIAccess) {
+      console.log('This browser supports WebMIDI!');
+    } else {
+      console.log('WebMIDI is not supported in this browser.');
+    }
+  </script>
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div class="outerFrame">
+    <!-- P5JS DRAWING -->
+    <div class="canvasOuterContainer">
+      <div id="sketch-holder"></div>
+    </div>
+    <!-- MIDIFIGHTER -->
+    <div id="sliders-holder" class="gridContainer slider"></div>
+    <!-- SKETCH -->
+    <script src="sketch.js"></script>
+</body>

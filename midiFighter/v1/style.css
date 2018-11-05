@@ -1,0 +1,66 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-color: black;
+  }
+  
+  html, body {
+    height: 100%;
+    font-family: 'Archivo Black', sans-serif;
+    color: rgb(43, 43, 43);;
+    font-size: 1em;
+  }
+  
+  .outerFrame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 95%;
+    background-color: black;
+  }
+
+  .canvasOuterContainer {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-gap: 30px 0px;
+    height: 100p;
+    margin: 20px;
+    
+  }
+
+input {
+    -webkit-appearance: none;
+    width: 90%;
+    height: 1px;
+    border-radius: 0px;   
+    background: rgb(43, 43, 43);
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1px;
+    height: 8px;
+    border-radius: 50%; 
+    background:white;
+    cursor: pointer;
+}
+
+  
+
+
+  
+
+
+  
