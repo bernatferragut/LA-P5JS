@@ -2,14 +2,17 @@
 // canvas vars
 let w = window.innerWidth, h = window.innerHeight;
 let canvas;
+
 // dot vars
 let dot;
 let rnd = 3;
+
 // oscillators
 let osc1;
+
 // slider vars ( multipliers )
 let x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15;
-
+let freqHistory = [];
 
 function setup() {
     // canvas
@@ -30,14 +33,34 @@ function setup() {
 }
 
 function draw() {
+    // multipliers
+    console.log('x2 value: ',  x2.value());
+
     // BG
     background(0);
+
     // dot
     dot.on(x2);
     dot.randomness();
+
     // oscillators
     osc1.freq(x2.value());
-}
+
+    // recording the freq history
+    freqHistory.push(x2.value());
+    stroke(255);
+    noFill();
+    beginShape()
+    for(let i = 0; i < freqHistory.length; i++) {
+        let y = map(freqHistory[i], 0, 127, height-200, 200);
+        vertex(i,y) //point(i, y);
+    }
+    endShape();
+
+    if( freqHistory.length > width) {
+        freqHistory.splice(0,1);
+    }
+}   
 
 // Dot object
 class Dot {
